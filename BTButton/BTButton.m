@@ -112,7 +112,7 @@
     if (buttonImage != nil) {
         CGImageRef buttonCGImage = buttonImage.CGImage;
         imageSize = CGSizeMake(CGImageGetWidth(buttonCGImage)/[self scale], CGImageGetHeight(buttonCGImage)/[self scale]);
-        buttonYOffset = (rect.size.height-kButtonOffset)/2.f - imageSize.height/2.f + kTopPadding;
+        buttonYOffset = (rect.size.height)/2.f - imageSize.height + kTopPadding;
         if (self.titleLabel.text.length == 0) {
             buttonYOffset = rect.size.height/2.f - imageSize.height/2.f;
         }
