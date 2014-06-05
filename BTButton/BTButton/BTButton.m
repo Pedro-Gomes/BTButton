@@ -96,6 +96,8 @@
         CGContextSetFillColorWithColor(context, self.backgroundColorHighlighted.CGColor);
         if (self.normalButtonImage != self.highlightedButtonImage) {
             buttonImage = self.highlightedButtonImage;
+        } else {
+            buttonImage = self.normalButtonImage;
         }
     }
     
@@ -104,12 +106,13 @@
     UIBezierPath *buttonBezier = [UIBezierPath bezierPathWithRoundedRect:buttonRect cornerRadius:self.cornerRadius];
     [buttonBezier addClip];
     CGContextFillRect(context, buttonRect);
-    
+    CGFloat buttonYOffset;
+    CGSize imageSize;
     // Draw button image
     if (buttonImage != nil) {
         CGImageRef buttonCGImage = buttonImage.CGImage;
-        CGSize imageSize = CGSizeMake(CGImageGetWidth(buttonCGImage)/[self scale], CGImageGetHeight(buttonCGImage)/[self scale]);
-        CGFloat buttonYOffset = (rect.size.height-kButtonOffset)/2.f - imageSize.height/2.f + kTopPadding;
+        imageSize = CGSizeMake(CGImageGetWidth(buttonCGImage)/[self scale], CGImageGetHeight(buttonCGImage)/[self scale]);
+        buttonYOffset = (rect.size.height-kButtonOffset)/2.f - imageSize.height/2.f + kTopPadding;
         if (self.titleLabel.text.length == 0) {
             buttonYOffset = rect.size.height/2.f - imageSize.height/2.f;
         }
@@ -121,8 +124,9 @@
     
     // Draw button title
     if (self.titleLabel.text.length > 0) {
-        CGContextSetFillColorWithColor(context, [UIColor whiteColor].CGColor);
-        [self.titleLabel.text drawInRect:CGRectMake(0.f, (buttonImage != nil ? rect.size.height-kButtonOffset : rect.size.height/2 - 10.f), rect.size.width, 20.f)
+        CGContextSetFillColorWithColor(context, self.titleLabel.textColor.CGColor);
+        CGRect drawRect = CGRectMake(0.f, (buttonImage != nil ? buttonYOffset + kTopPadding + imageSize.height : rect.size.height/2 - 10.f), rect.size.width, self.frame.size.height - (buttonYOffset + imageSize.height + kTopPadding));
+        [self.titleLabel.text drawInRect:drawRect
                                 withFont:self.titleLabel.font
                            lineBreakMode:self.titleLabel.lineBreakMode
                                alignment:UITextAlignmentCenter];
